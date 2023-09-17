@@ -13,7 +13,6 @@ const Canvas = ({width, height}) => {
 
     const setCanvasRef = useOnDraw(onDraw, socket);
 
-
     function onDraw(ctx, point){
         ctx.fillStyle = "#000000"
         ctx.beginPath();
@@ -21,21 +20,15 @@ const Canvas = ({width, height}) => {
         ctx.fill();
     }
 
-    function drawReceivedPoint(point) {
-        const ctx = canvasRef.current.getContext("2d");
-        ctx.fillStyle = "#FF0000"; // You can use a different color for received points
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
-        ctx.fill();
-      }
-
     return(
-        <canvas
-            width = {width}
-            height = {height}
-            style = {canvasStyle}
-            ref = {setCanvasRef}
-        />
+        <>
+            <canvas
+                width = {width}
+                height = {height}
+                style = {canvasStyle}
+                ref = {setCanvasRef}
+            />
+        </>
     )
 }
 

@@ -14,6 +14,21 @@ export function useOnDraw(onDraw, socket){
         initMouseUpListener();
     }
 
+    if(socket){
+        socket.on("client", (point) => {
+            console.log(point)
+            drawReceivedPoint(point);
+        })
+    }
+
+    function drawReceivedPoint(point) {
+        const ctx = canvasRef.current.getContext("2d");
+        ctx.fillStyle = "#FF0000"; // You can use a different color for received points
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
     function initMouseMoveListener(){
         const mouseMoveListener = (e) => {
             if(isDrawingRef.current && socket){
@@ -21,7 +36,6 @@ export function useOnDraw(onDraw, socket){
                 const ctx = canvasRef.current.getContext('2d');
                 if(onDraw) onDraw(ctx, point);
                 console.log(point);
-                console.log(socket)
                 if(socket){
                     socket.emit("client", point)
                 }
