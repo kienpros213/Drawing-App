@@ -1,9 +1,8 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 
-export function useOnDraw(onDraw){
-
+export function useOnDraw(onDraw, socket){
+    
     const canvasRef = useRef(null);
-
     const isDrawingRef = useRef(false);    
 
     //set canvas reference
@@ -17,11 +16,15 @@ export function useOnDraw(onDraw){
 
     function initMouseMoveListener(){
         const mouseMoveListener = (e) => {
-            if(isDrawingRef.current){
+            if(isDrawingRef.current && socket){
                 const point = computePointInCanvas(e.clientX, e.clientY);
                 const ctx = canvasRef.current.getContext('2d');
                 if(onDraw) onDraw(ctx, point);
                 console.log(point);
+                console.log(socket)
+                if(socket){
+                    socket.emit("client", point)
+                }
             }
         }
         window.addEventListener("mousemove", mouseMoveListener)
@@ -54,7 +57,7 @@ export function useOnDraw(onDraw){
             return null;
         }
     }
-    
+
     return setCanvasRef
 
 };
