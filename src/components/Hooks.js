@@ -1,22 +1,22 @@
 import { useRef, useEffect, useState } from "react";
 
-export function useOnDraw(onDraw, socket){
-    
+export function useOnDraw(socket) {
+
     const canvasRef = useRef(null);
-    const isDrawingRef = useRef(false);    
+    const isDrawingRef = useRef(false);
 
     //set canvas reference
-    function setCanvasRef(ref){
-        if(!ref) return;
+    function setCanvasRef(ref) {
+        if (!ref) return;
         canvasRef.current = ref;
         initMouseMoveListener();
         initMouseDownListener();
         initMouseUpListener();
+        setCurrentState();
     }
 
-    if(socket){
+    if (socket) {
         socket.on("client", (point) => {
-            console.log(point)
             drawReceivedPoint(point);
         })
     }
@@ -29,38 +29,37 @@ export function useOnDraw(onDraw, socket){
         ctx.fill();
     }
 
-    function initMouseMoveListener(){
+    function initMouseMoveListener() {
         const mouseMoveListener = (e) => {
-            if(isDrawingRef.current && socket){
+            if (isDrawingRef.current && socket) {
                 const point = computePointInCanvas(e.clientX, e.clientY);
-                const ctx = canvasRef.current.getContext('2d');
-                if(onDraw) onDraw(ctx, point);
                 console.log(point);
-                if(socket){
+                if (socket) {
                     socket.emit("client", point)
+                    drawReceivedPoint(point);
                 }
             }
         }
         window.addEventListener("mousemove", mouseMoveListener)
     }
 
-    function initMouseDownListener(){
-        if(!canvasRef.current) return
+    function initMouseDownListener() {
+        if (!canvasRef.current) return
         const listener = () => {
             isDrawingRef.current = true;
         }
         canvasRef.current.addEventListener("mousedown", listener)
     }
 
-    function initMouseUpListener(){
+    function initMouseUpListener() {
         const listener = () => {
             isDrawingRef.current = false;
         }
         canvasRef.current.addEventListener("mouseup", listener)
     }
 
-    function computePointInCanvas(clientX, clientY){
-        if(canvasRef.current){
+    function computePointInCanvas(clientX, clientY) {
+        if (canvasRef.current) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
             return {
                 x: clientX - boundingRect.left,
@@ -69,6 +68,18 @@ export function useOnDraw(onDraw, socket){
         }
         else {
             return null;
+        }
+    }
+
+    function setCurrentState() {
+        if (socket) {
+            socket.on("drawState", (drawState) => {
+                // console.log(drawState);
+                for (let i = 0; i < drawState.length; i++) {
+                    console.log(drawState[i]);
+                    drawReceivedPoint(drawState[i]);
+                }
+            })
         }
     }
 

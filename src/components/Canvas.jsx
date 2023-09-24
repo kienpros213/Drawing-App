@@ -2,31 +2,24 @@ import { useState, useEffect } from "react";
 import { useOnDraw } from "./Hooks";
 import { io } from "socket.io-client";
 
-const Canvas = ({width, height}) => {
-    
+const Canvas = ({ width, height }) => {
+
     const [socket, setSocket] = useState(null)
-    
-    useEffect( () => {
-        const initSocket = io('http://localhost:3030/')
+
+    useEffect(() => {
+        const initSocket = io('ws://localhost:3000')
         setSocket(initSocket)
-    },[])
+    }, [])
 
-    const setCanvasRef = useOnDraw(onDraw, socket);
+    const setCanvasRef = useOnDraw(socket);
 
-    function onDraw(ctx, point){
-        ctx.fillStyle = "#000000"
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI);
-        ctx.fill();
-    }
-
-    return(
+    return (
         <>
             <canvas
-                width = {width}
-                height = {height}
-                style = {canvasStyle}
-                ref = {setCanvasRef}
+                width={width}
+                height={height}
+                style={canvasStyle}
+                ref={setCanvasRef}
             />
         </>
     )
