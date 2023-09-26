@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-export function useOnDraw(socket) {
+export function useOnDraw(socket, roomName) {
 
     const canvasRef = useRef(null);
     const isDrawingRef = useRef(false);
@@ -15,12 +15,14 @@ export function useOnDraw(socket) {
         setCurrentState();
     }
 
+    //draw canvas current state
     if (socket) {
-        socket.on("client", (point) => {
+        socket.on("draw", (point) => {
             drawReceivedPoint(point);
         })
     }
 
+    //draw
     function drawReceivedPoint(point) {
         const ctx = canvasRef.current.getContext("2d");
         ctx.fillStyle = "#FF0000"; // You can use a different color for received points
@@ -29,13 +31,14 @@ export function useOnDraw(socket) {
         ctx.fill();
     }
 
+    //draw when move
     function initMouseMoveListener() {
         const mouseMoveListener = (e) => {
             if (isDrawingRef.current && socket) {
                 const point = computePointInCanvas(e.clientX, e.clientY);
-                console.log(point);
                 if (socket) {
-                    socket.emit("client", point)
+                    socket.emit("draw", { point, roomName })
+                    console.log({ point, roomName })
                     drawReceivedPoint(point);
                 }
             }
@@ -43,6 +46,7 @@ export function useOnDraw(socket) {
         window.addEventListener("mousemove", mouseMoveListener)
     }
 
+    //start draw on mouse down
     function initMouseDownListener() {
         if (!canvasRef.current) return
         const listener = () => {
@@ -51,6 +55,7 @@ export function useOnDraw(socket) {
         canvasRef.current.addEventListener("mousedown", listener)
     }
 
+    //stop draw on mouse up
     function initMouseUpListener() {
         const listener = () => {
             isDrawingRef.current = false;
@@ -58,6 +63,7 @@ export function useOnDraw(socket) {
         canvasRef.current.addEventListener("mouseup", listener)
     }
 
+    //compute point in canvas
     function computePointInCanvas(clientX, clientY) {
         if (canvasRef.current) {
             const boundingRect = canvasRef.current.getBoundingClientRect();
@@ -71,10 +77,10 @@ export function useOnDraw(socket) {
         }
     }
 
+    //set current canvas state
     function setCurrentState() {
         if (socket) {
             socket.on("drawState", (drawState) => {
-                // console.log(drawState);
                 for (let i = 0; i < drawState.length; i++) {
                     console.log(drawState[i]);
                     drawReceivedPoint(drawState[i]);
