@@ -1,17 +1,18 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 
-export function useOnDraw(socket, roomName) {
+export function useOnDraw(socket, roomName, isDrawingRef) {
 
     const canvasRef = useRef(null);
-    const isDrawingRef = useRef(false);
+    // const isDrawingRef = useRef(false);
+    console.log("hook", isDrawingRef)
 
     //set canvas reference
     function setCanvasRef(ref) {
         if (!ref) return;
         canvasRef.current = ref;
-        initMouseMoveListener();
-        initMouseDownListener();
-        initMouseUpListener();
+        // initMouseMoveListener();
+        // initMouseDownListener();
+        // initMouseUpListener();
         setCurrentState();
     }
 
@@ -34,11 +35,12 @@ export function useOnDraw(socket, roomName) {
     //draw when move
     function initMouseMoveListener() {
         const mouseMoveListener = (e) => {
-            if (isDrawingRef.current && socket) {
+            if (drawStatus && socket) {
+                console.log("init", isDrawingRef)
                 const point = computePointInCanvas(e.clientX, e.clientY);
                 if (socket) {
                     socket.emit("draw", { point, roomName })
-                    console.log({ point, roomName })
+                    // console.log({ point, roomName })
                     drawReceivedPoint(point);
                 }
             }
@@ -47,21 +49,21 @@ export function useOnDraw(socket, roomName) {
     }
 
     //start draw on mouse down
-    function initMouseDownListener() {
-        if (!canvasRef.current) return
-        const listener = () => {
-            isDrawingRef.current = true;
-        }
-        canvasRef.current.addEventListener("mousedown", listener)
-    }
+    // function initMouseDownListener() {
+    //     if (!canvasRef.current) return
+    //     const listener = () => {
+    //         isDrawingRef.current = true;
+    //     }
+    //     canvasRef.current.addEventListener("mousedown", listener)
+    // }
 
     //stop draw on mouse up
-    function initMouseUpListener() {
-        const listener = () => {
-            isDrawingRef.current = false;
-        }
-        canvasRef.current.addEventListener("mouseup", listener)
-    }
+    // function initMouseUpListener() {
+    //     const listener = () => {
+    //         isDrawingRef.current = false;
+    //     }
+    //     canvasRef.current.addEventListener("mouseup", listener)
+    // }
 
     //compute point in canvas
     function computePointInCanvas(clientX, clientY) {
