@@ -13,7 +13,6 @@ const Canvas = (props) => {
   }
 
   if (props.socket) {
-    console.log(props.socket);
     props.socket.on("draw", (point) => {
       drawReceivedPoint(canvasRef, point);
     });
@@ -22,7 +21,12 @@ const Canvas = (props) => {
   return (
     <>
       <canvas
-        onMouseMove={mouseMoveListener(canvasRef, isDrawRef, props.socket)}
+        onMouseMove={mouseMoveListener(
+          roomName,
+          canvasRef,
+          isDrawRef,
+          props.socket
+        )}
         onMouseDown={() => {
           setIsDrawingRef(true);
         }}
