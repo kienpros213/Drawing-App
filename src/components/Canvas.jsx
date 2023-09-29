@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { mouseMoveListener } from "../utils/mouseMoveListener";
-import { drawReceivedPoint } from "../utils/mouseMoveListener";
+import { drawRectDown, drawRectMove, drawRectUp } from "../utils/DrawRect";
 
 const Canvas = (props) => {
   const roomName = props.roomName;
-  const [isDrawRef, setIsDrawingRef] = useState(false);
+  const [isDraw, setIsDraw] = useState(false);
   const canvasRef = useRef(null);
+  const [startPoint, setStartPoint] = useState();
 
   function setCanvasRef(ref) {
     if (!ref) return;
@@ -21,18 +21,9 @@ const Canvas = (props) => {
   return (
     <>
       <canvas
-        onMouseMove={mouseMoveListener(
-          roomName,
-          canvasRef,
-          isDrawRef,
-          props.socket
-        )}
-        onMouseDown={() => {
-          setIsDrawingRef(true);
-        }}
-        onMouseUp={() => {
-          setIsDrawingRef(false);
-        }}
+        onMouseMove={drawRectMove(canvasRef, startPoint, isDraw)}
+        onMouseDown={drawRectDown(canvasRef, setIsDraw, setStartPoint)}
+        onMouseUp={drawRectUp(setIsDraw)}
         width={props.width}
         height={props.height}
         style={canvasStyle}

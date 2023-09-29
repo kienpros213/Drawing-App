@@ -1,6 +1,6 @@
-export function mouseMoveListener(roomName, canvasRef, isDrawRef, socket) {
+export function mouseMoveListener(roomName, canvasRef, isDraw, socket) {
   const onMouseMove = (e) => {
-    if (isDrawRef && socket) {
+    if (isDraw && socket) {
       const point = computePointInCanvas(canvasRef, e.clientX, e.clientY);
       if (socket) {
         console.log({ point, roomName });
