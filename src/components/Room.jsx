@@ -5,6 +5,14 @@ function Room(props) {
     props.socket.emit("joinRequest", room);
   }
 
+  function setFalse() {
+    const setFalse = props.setTool(false);
+  }
+
+  function setTrue() {
+    const setTrue = props.setTool(true);
+  }
+
   return (
     <>
       <button
@@ -22,8 +30,23 @@ function Room(props) {
         Join Room{" "}
       </button>
       <div>
-        <button type="button"> brush </button>
-        <button type="button"> rect </button>
+        <button type="button" onClick={setFalse}>
+          {" "}
+          brush{" "}
+        </button>
+        <button type="button" onClick={setTrue}>
+          {" "}
+          rect{" "}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            console.log(props.tool);
+          }}
+        >
+          {" "}
+          check{" "}
+        </button>
       </div>
     </>
   );

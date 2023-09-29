@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { drawRectDown, drawRectMove, drawRectUp } from "../utils/DrawRect";
+import { mouseMoveListener } from "../utils/MouseMoveListener";
 
 const Canvas = (props) => {
   const roomName = props.roomName;
@@ -18,12 +19,28 @@ const Canvas = (props) => {
     });
   }
 
+  let mouseMove, mouseDown, mouseUp;
+
+  if (props.tool) {
+    mouseMove = drawRectMove(canvasRef, startPoint, isDraw);
+    mouseDown = drawRectDown(canvasRef, setIsDraw, setStartPoint);
+    mouseUp = drawRectUp(setIsDraw);
+  } else {
+    mouseMove = mouseMoveListener(roomName, canvasRef, isDraw, props.socket);
+    mouseDown = () => {
+      setIsDraw(true);
+    };
+    mouseUp = () => {
+      setIsDraw(false);
+    };
+  }
+
   return (
     <>
       <canvas
-        onMouseMove={drawRectMove(canvasRef, startPoint, isDraw)}
-        onMouseDown={drawRectDown(canvasRef, setIsDraw, setStartPoint)}
-        onMouseUp={drawRectUp(setIsDraw)}
+        onMouseMove={mouseMove}
+        onMouseDown={mouseDown}
+        onMouseUp={mouseUp}
         width={props.width}
         height={props.height}
         style={canvasStyle}

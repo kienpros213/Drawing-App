@@ -10,7 +10,7 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [tool, setTool] = useState();
+  const [tool, setTool] = useState(false);
 
   useEffect(() => {
     const initSocket = io("ws://localhost:3000");
@@ -29,8 +29,15 @@ function App() {
           >
             log out
           </button>
-          <Room socket={socket} roomName={roomName} setRoomName={setRoomName} />
+          <Room
+            tool={tool}
+            socket={socket}
+            roomName={roomName}
+            setRoomName={setRoomName}
+            setTool={setTool}
+          />
           <Canvas
+            tool={tool}
             roomName={roomName}
             socket={socket}
             width={700}
