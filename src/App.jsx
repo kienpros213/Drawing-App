@@ -10,44 +10,72 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [roomName, setRoomName] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [tool, setTool] = useState(false);
+  const [tool, setTool] = useState("rectTool");
 
   useEffect(() => {
     const initSocket = io("ws://localhost:3000");
     setSocket(initSocket);
   }, []);
 
-  if (isLoggedIn) {
-    return (
-      <div className="App">
-        <Stack>
-          <button
-            type="button"
-            onClick={() => {
-              setIsLoggedIn(false);
-            }}
-          >
-            log out
-          </button>
-          <Room
-            tool={tool}
-            socket={socket}
-            roomName={roomName}
-            setRoomName={setRoomName}
-            setTool={setTool}
-          />
-          <Canvas
-            tool={tool}
-            roomName={roomName}
-            socket={socket}
-            width={700}
-            height={500}
-          />
-        </Stack>
-      </div>
-    );
-  }
-  return <Login setIsLoggedIn={setIsLoggedIn} />;
+  // if (isLoggedIn) {
+  //   return (
+  //     <div className="App">
+  //       <Stack>
+  //         <button
+  //           type="button"
+  //           onClick={() => {
+  //             setIsLoggedIn(false);
+  //           }}
+  //         >
+  //           log out
+  //         </button>
+  //         <Room
+  //           tool={tool}
+  //           socket={socket}
+  //           roomName={roomName}
+  //           setRoomName={setRoomName}
+  //           setTool={setTool}
+  //         />
+  //         <Canvas
+  //           tool={tool}
+  //           roomName={roomName}
+  //           socket={socket}
+  //           width={700}
+  //           height={500}
+  //         />
+  //       </Stack>
+  //     </div>
+  //   );
+  // }
+  // return <Login setIsLoggedIn={setIsLoggedIn} />;
+  return (
+    <div className="App">
+      <Stack>
+        <button
+          type="button"
+          onClick={() => {
+            setIsLoggedIn(false);
+          }}
+        >
+          log out
+        </button>
+        <Room
+          tool={tool}
+          socket={socket}
+          roomName={roomName}
+          setRoomName={setRoomName}
+          setTool={setTool}
+        />
+        <Canvas
+          tool={tool}
+          roomName={roomName}
+          socket={socket}
+          width={700}
+          height={500}
+        />
+      </Stack>
+    </div>
+  );
 }
 
 export default App;

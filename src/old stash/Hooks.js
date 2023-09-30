@@ -3,7 +3,6 @@ import { useRef, useEffect, useState } from "react";
 export function useOnDraw(socket, roomName, isDrawingRef) {
   const canvasRef = useRef(null);
   // const isDrawingRef = useRef(false);
-  console.log("hook", isDrawingRef);
 
   //set canvas reference
   function setCanvasRef(ref) {
@@ -35,11 +34,9 @@ export function useOnDraw(socket, roomName, isDrawingRef) {
   function initMouseMoveListener() {
     const mouseMoveListener = (e) => {
       if (drawStatus && socket) {
-        console.log("init", isDrawingRef);
         const point = computePointInCanvas(e.clientX, e.clientY);
         if (socket) {
           socket.emit("draw", { point, roomName });
-          // console.log({ point, roomName })
           drawReceivedPoint(point);
         }
       }
@@ -82,7 +79,6 @@ export function useOnDraw(socket, roomName, isDrawingRef) {
     if (socket) {
       socket.on("drawState", (drawState) => {
         for (let i = 0; i < drawState.length; i++) {
-          console.log(drawState[i]);
           drawReceivedPoint(drawState[i]);
         }
       });

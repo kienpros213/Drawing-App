@@ -7,7 +7,7 @@ export class DrawBrushClass {
     this.setIsDraw = setIsDraw;
   }
 
-  brushMouseMove(event) {
+  mouseMove(event) {
     if (this.isDraw) {
       const point = computePointInCanvas(
         this.canvasRef,
@@ -18,11 +18,11 @@ export class DrawBrushClass {
     }
   }
 
-  brushMouseDown() {
+  mouseDown(event) {
     this.setIsDraw(true);
   }
 
-  brushMouseUp() {
+  mouseUp(event) {
     this.setIsDraw(false);
   }
 }

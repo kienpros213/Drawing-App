@@ -1,39 +1,40 @@
 import { useRef, useState } from "react";
-import { DrawBrushClass } from "../utilClass/DrawBrushClass";
-import { DrawRectClass } from "../utilClass/DrawRectClass";
-import { toolSwap } from "../utils/toolSwap";
+import { toolFactory } from "../utils/toolFactory";
 
 function Canvas(props) {
   const canvasRef = useRef(null);
   const [isDraw, setIsDraw] = useState(false);
   const [startPoint, setStartPoint] = useState();
-  const DrawRect = new DrawRectClass(
+  const [snapshot, setSnapshot] = useState();
+
+  const toolHandler = new toolFactory(
+    props.tool,
     canvasRef,
-    startPoint,
     isDraw,
     setIsDraw,
-    setStartPoint
+    setStartPoint,
+    startPoint,
+    snapshot,
+    setSnapshot
   );
-  const DrawBrush = new DrawBrushClass(canvasRef, isDraw, setIsDraw);
 
   function setCanvasRef(ref) {
     if (!ref) return;
     canvasRef.current = ref;
   }
 
-  const { mouseMove, mouseDown, mouseUp } = toolSwap(
-    props.tool,
-    isDraw,
-    DrawRect,
-    DrawBrush
-  );
-
   return (
     <>
       <canvas
-        onMouseMove={mouseMove}
-        onMouseDown={mouseDown}
-        onMouseUp={mouseUp}
+        onMouseMove={(event) => {
+          toolHandler.mouseMove(event);
+        }}
+        onMouseDown={(event) => {
+          toolHandler.mouseDown(event);
+        }}
+        onMouseUp={(event) => {
+          toolHandler.mouseUp(event);
+        }}
         width={props.width}
         height={props.height}
         style={canvasStyle}

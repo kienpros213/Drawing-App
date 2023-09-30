@@ -15,12 +15,7 @@ function Room(props) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => {
-          console.log(props.roomName);
-        }}
-      >
+      <button type="button" onClick={() => {}}>
         {" "}
         check Room{" "}
       </button>
