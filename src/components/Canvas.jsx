@@ -31,10 +31,6 @@ function Canvas(props) {
   }
 
   if (props.tool) {
-    // mouseMove = drawRectMove(canvasRef, startPoint, isDraw);
-    // mouseDown = drawRectDown(canvasRef, setIsDraw, setStartPoint);
-    // mouseUp = drawRectUp(setIsDraw);
-
     mouseMove = (event) => {
       if (isDraw) {
         DrawRect.drawRectMove(event);
@@ -46,8 +42,6 @@ function Canvas(props) {
     mouseUp = () => {
       DrawRect.drawRectUp();
     };
-
-    mouseMove;
   } else {
     mouseMove = mouseMoveListener(roomName, canvasRef, isDraw, props.socket);
     mouseDown = () => {

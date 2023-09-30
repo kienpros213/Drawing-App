@@ -1,6 +1,5 @@
 export class DrawRectClass {
   constructor(canvasRef, startPoint, isDraw, setIsDraw, setStartPoint) {
-    this.event = event;
     this.snapshot;
     this.canvasRef = canvasRef;
     this.startPoint = startPoint;
@@ -10,7 +9,11 @@ export class DrawRectClass {
   }
   drawRectMove(event) {
     console.log(this.snapshot);
-    const ctx = this.canvasRef.current.getContext("2d");
+    if (this.snapshot) {
+      const ctx = this.canvasRef.current.getContext("2d");
+      ctx.putImageData(this.snapshot, 0, 0);
+    } else {
+    }
     this.drawReceivedPoint(
       this.canvasRef,
       this.startPoint,
@@ -24,8 +27,6 @@ export class DrawRectClass {
     this.setStartPoint(
       this.computePointInCanvas(this.canvasRef, event.clientX, event.clientY)
     );
-    const ctx = this.canvasRef.current.getContext("2d");
-    this.snapshot = 3;
   }
 
   drawRectUp() {
@@ -33,6 +34,7 @@ export class DrawRectClass {
   }
 
   drawReceivedPoint(canvasRef, startPoint, pointX, pointY) {
+    this.setSnapshot(this.canvasRef);
     const ctx = canvasRef.current.getContext("2d");
     const nextPoint = this.computePointInCanvas(canvasRef, pointX, pointY);
     ctx.fillStyle = "#FF0000";
@@ -44,6 +46,11 @@ export class DrawRectClass {
       nextPoint.y - startPoint.y
     );
     ctx.fill();
+  }
+
+  setSnapshot(canvasRef) {
+    const ctx = canvasRef.current.getContext("2d");
+    this.snapshot = ctx.getImageData(0, 0, 700, 500);
   }
 
   computePointInCanvas(canvasRef, clientX, clientY) {

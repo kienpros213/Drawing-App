@@ -22,6 +22,7 @@ export function drawRectDown(canvasRef, setIsDraw, setStartPoint) {
 }
 
 export function drawRectUp(setIsDraw) {
+  console.log(snapshot);
   const drawRectMouseUp = () => {
     setIsDraw(false);
   };
