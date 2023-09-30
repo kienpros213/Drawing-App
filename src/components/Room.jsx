@@ -6,11 +6,11 @@ function Room(props) {
   }
 
   function setFalse() {
-    const setFalse = props.setTool(false);
+    const setFalse = props.setTool("brushTool");
   }
 
   function setTrue() {
-    const setTrue = props.setTool(true);
+    const setTrue = props.setTool("rectTool");
   }
 
   return (

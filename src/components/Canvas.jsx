@@ -1,10 +1,9 @@
 import { useRef, useState } from "react";
-import { drawRectDown, drawRectMove, drawRectUp } from "../utils/DrawRect";
-import { mouseMoveListener } from "../utils/MouseMoveListener";
+import { DrawBrushClass } from "../utilClass/DrawBrushClass";
 import { DrawRectClass } from "../utilClass/DrawRectClass";
+import { toolSwap } from "../utils/toolSwap";
 
 function Canvas(props) {
-  const roomName = props.roomName;
   const canvasRef = useRef(null);
   const [isDraw, setIsDraw] = useState(false);
   const [startPoint, setStartPoint] = useState();
@@ -15,42 +14,19 @@ function Canvas(props) {
     setIsDraw,
     setStartPoint
   );
-  let mouseMove, mouseDown, mouseUp;
+  const DrawBrush = new DrawBrushClass(canvasRef, isDraw, setIsDraw);
 
-  //setup canvasRef
   function setCanvasRef(ref) {
     if (!ref) return;
     canvasRef.current = ref;
   }
 
-  //draw recieved point from server
-  if (props.socket) {
-    props.socket.on("draw", (point) => {
-      drawReceivedPoint(canvasRef, point);
-    });
-  }
-
-  if (props.tool) {
-    mouseMove = (event) => {
-      if (isDraw) {
-        DrawRect.drawRectMove(event);
-      }
-    };
-    mouseDown = (event) => {
-      DrawRect.drawRectDown(event);
-    };
-    mouseUp = () => {
-      DrawRect.drawRectUp();
-    };
-  } else {
-    mouseMove = mouseMoveListener(roomName, canvasRef, isDraw, props.socket);
-    mouseDown = () => {
-      setIsDraw(true);
-    };
-    mouseUp = () => {
-      setIsDraw(false);
-    };
-  }
+  const { mouseMove, mouseDown, mouseUp } = toolSwap(
+    props.tool,
+    isDraw,
+    DrawRect,
+    DrawBrush
+  );
 
   return (
     <>
