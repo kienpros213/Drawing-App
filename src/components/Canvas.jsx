@@ -23,8 +23,16 @@ function Canvas(props) {
     canvasRef.current = ref;
   }
 
+  function clearCanvas() {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, 700, 500);
+  }
   return (
     <>
+      <button type="button" onClick={clearCanvas}>
+        {" "}
+        clear canvas{" "}
+      </button>
       <canvas
         onMouseMove={(event) => {
           toolHandler.mouseMove(event);

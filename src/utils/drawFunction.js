@@ -22,6 +22,20 @@ export function rectDraw(canvasRef, startPoint, pointX, pointY) {
   ctx.fill();
 }
 
+//circle tool
+export function circleDraw(canvasRef, startPoint, pointX, pointY) {
+  const ctx = canvasRef.current.getContext("2d");
+  const nextPoint = computePointInCanvas(canvasRef, pointX, pointY);
+  const radius = Math.sqrt(
+    Math.pow(startPoint.x - nextPoint.x, 2) +
+      Math.pow(startPoint.y - nextPoint.y, 2)
+  );
+  ctx.strokeStyle = "#FF0000"; // Set the stroke color
+  ctx.lineWidth = 2; // You can adjust the line width as needed
+  ctx.beginPath();
+  ctx.arc(startPoint.x, startPoint.y, radius, 0, 2 * Math.PI);
+  ctx.stroke(); // Use stroke() to draw the circle outline
+}
 //re-compute point
 export function computePointInCanvas(canvasRef, clientX, clientY) {
   if (canvasRef.current) {
